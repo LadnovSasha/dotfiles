@@ -1,0 +1,10 @@
+
+# Ignore everything
+*
+
+# But include these directories
+!nvim/
+!nvim/**
+!ghostty/
+!ghostty/**
+!README.md
