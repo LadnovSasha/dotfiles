@@ -397,23 +397,23 @@ freetype-load-flags = hinting,force-autohint,monochrome,autohint
 # 
 #   - macOS: titlebar tabs style is not updated when switching themes.
 # 
-theme = 
+theme = Snazzy
 
 # Background color for the window.
 # Specified as either hex (`#RRGGBB` or `RRGGBB`) or a named X11 color.
-background = #282c34
+background = #1e1f29
 
 # Foreground color for the window.
 # Specified as either hex (`#RRGGBB` or `RRGGBB`) or a named X11 color.
-foreground = #ffffff
+foreground = #ebece6
 
 # The foreground and background color for selection. If this is not set, then
 # the selection color is just the inverted window background and foreground
 # (note: not to be confused with the cell bg/fg).
 # Specified as either hex (`#RRGGBB` or `RRGGBB`) or a named X11 color.
-selection-foreground = 
+selection-foreground = #000000
 
-selection-background = 
+selection-background = #81aec6
 # Swap the foreground and background colors of cells for selection. This
 # option overrides the `selection-foreground` and `selection-background`
 # options.
@@ -734,7 +734,7 @@ cursor-opacity = 1
 #   * `underline`
 #   * `block_hollow`
 # 
-cursor-style = block
+cursor-style = bar
 
 # Sets the default blinking state of the cursor. This is just the default
 # state; running programs may override the cursor style using `DECSCUSR` (`CSI
@@ -754,7 +754,7 @@ cursor-style = block
 #   * `true`
 #   * `false`
 # 
-cursor-style-blink = 
+cursor-style-blink = false
 
 # The color of the text under the cursor. If this is not set, a default will
 # be chosen.
@@ -828,7 +828,7 @@ mouse-scroll-multiplier = 1
 # widgets to show through which isn't generally desirable.
 # 
 # On macOS, changing this configuration requires restarting Ghostty completely.
-background-opacity = 1
+background-opacity = 0.8
 
 # Whether to blur the background when `background-opacity` is less than 1.
 # 
@@ -861,7 +861,7 @@ background-opacity = 1
 # need to set environment-specific settings and/or install third-party plugins
 # in order to support background blur, as there isn't a unified interface for
 # doing so.
-background-blur = false
+background-blur = true
 
 # The opacity level (opposite of transparency) of an unfocused split.
 # Unfocused splits by default are slightly faded out to make it easier to see
@@ -1703,7 +1703,7 @@ focus-follows-mouse = false
 #   * `allow`
 #   * `deny`
 # 
-clipboard-read = ask
+clipboard-read = allow
 
 clipboard-write = allow
 # Trims trailing whitespace on data that is copied to the clipboard. This does
@@ -1785,7 +1785,7 @@ click-repeat-interval = 0
 # If "foo" contains `a = 2`, the final value of `a` will be 2, because
 # `foo` is loaded after the configuration file that configures the
 # nested `config-file` value.
-config-file = 
+config-file = keybind
 
 # When this is true, the default configuration file paths will be loaded.
 # The default configuration file paths are currently only the XDG
@@ -1908,7 +1908,7 @@ quick-terminal-screen = main
 # Duration (in seconds) of the quick terminal enter and exit animation.
 # Set it to 0 to disable animation completely. This can be changed at
 # runtime.
-quick-terminal-animation-duration = 0.2
+quick-terminal-animation-duration = 0
 
 # Automatically hide the quick terminal when focus shifts to another window.
 # Set it to false for the quick terminal to remain open even when it loses focus.
@@ -2140,7 +2140,7 @@ macos-non-native-fullscreen = false
 # most cases.
 # 
 # Changing this option at runtime only applies to new windows.
-macos-titlebar-style = transparent
+macos-titlebar-style = native
 
 # Whether the proxy icon in the macOS titlebar is visible. The proxy icon
 # is the icon that represents the folder of the current working directory.
@@ -2197,12 +2197,12 @@ macos-titlebar-proxy-icon = visible
 # key, respectively.
 # 
 # This does not work with GLFW builds.
-macos-option-as-alt = 
+macos-option-as-alt = left
 
 # Whether to enable the macOS window shadow. The default value is true.
 # With some window managers and window transparency settings, you may
 # find false more visually appealing.
-macos-window-shadow = true
+macos-window-shadow = false
 
 # If true, Ghostty on macOS will automatically enable the "Secure Input"
 # feature when it detects that a password prompt is being displayed.
