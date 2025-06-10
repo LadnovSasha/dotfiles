@@ -7,4 +7,6 @@
 !nvim/**
 !ghostty/
 !ghostty/**
+!zellij/
+!zellij/**
 !README.md

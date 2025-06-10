@@ -1,0 +1,31 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=2 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+
+    tab name="Service" focus=true {
+        pane {
+            command "nvim"
+        }
+    }
+
+    tab name="Exec" {
+        pane {
+            command "claude"
+        }
+    }
+
+    tab name="Git" {
+        pane split_direction="horizontal" {
+            pane {
+                command "lazygit"
+            }
+        }
+    }
+}
