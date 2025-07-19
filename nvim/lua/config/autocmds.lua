@@ -29,18 +29,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.api.nvim_create_autocmd('FileType', {
   group = 'CustomIndent',
-  pattern = 'prisma',
-  callback = function()
-    vim.bo.tabstop = 2
-    vim.bo.shiftwidth = 2
-    vim.bo.softtabstop = 2
-    vim.bo.expandtab = true -- Use spaces instead of tabs
-  end,
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  group = 'CustomIndent',
-  pattern = 'lua',
+  pattern = 'prisma,yml,yaml,lua',
   callback = function()
     vim.bo.tabstop = 2
     vim.bo.shiftwidth = 2

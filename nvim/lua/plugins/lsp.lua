@@ -28,69 +28,10 @@ return {
       'saghen/blink.cmp',
     },
     config = function()
-      --  This function gets run when an LSP attaches to a particular buffer.
+      -- Setup LSP highlights
       vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
+        group = vim.api.nvim_create_augroup('lsp-highlight', { clear = true }),
         callback = function(event)
-          local map = function(keys, func, desc, mode)
-            mode = mode or 'n'
-            vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
-          end
-
-          -- Rename the variable under your cursor.
-          map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-          map('<leader>cr', vim.lsp.buf.rename, '[C]ode [R]ename')
-
-          -- Execute a code action, usually your cursor needs to be on top of an error
-          map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
-          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
-
-          -- Format document or selection
-          map('<leader>cf', function()
-            vim.lsp.buf.format { async = true }
-          end, '[C]ode [F]ormat')
-
-          -- Organize imports
-          map('<leader>co', function()
-            vim.lsp.buf.code_action({
-              apply = true,
-              context = {
-                only = { 'source.organizeImports' }
-              }
-            })
-          end, '[C]ode [O]rganize imports')
-
-          -- Add missing imports
-          map('<leader>cm', function()
-            vim.lsp.buf.code_action({
-              apply = true,
-              context = {
-                only = { 'source.addMissingImports' }
-              }
-            })
-          end, '[C]ode Add [M]issing imports')
-
-          -- Find references for the word under your cursor.
-          map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
-          -- Jump to the implementation of the word under your cursor.
-          map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-
-          -- Jump to the definition of the word under your cursor.
-          map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
-          -- WARN: This is not Goto Definition, this is Goto Declaration.
-          map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-
-          -- Fuzzy find all the symbols in your current document.
-          map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
-
-          -- Fuzzy find all the symbols in your current workspace.
-          map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
-
-          -- Jump to the type of the word under your cursor.
-          map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
-
           -- This function resolves a difference between neovim nightly and stable
           local function client_supports_method(client, method, bufnr)
             if vim.fn.has 'nvim-0.11' == 1 then
@@ -100,11 +41,11 @@ return {
             end
           end
 
-          -- The following two autocommands are used to highlight references of the
+          -- The following autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
-            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+            local highlight_augroup = vim.api.nvim_create_augroup('lsp-document-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
               group = highlight_augroup,
@@ -118,19 +59,12 @@ return {
             })
 
             vim.api.nvim_create_autocmd('LspDetach', {
-              group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+              group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
               callback = function(event2)
                 vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+                vim.api.nvim_clear_autocmds { group = 'lsp-document-highlight', buffer = event2.buf }
               end,
             })
-          end
-
-          -- The following code creates a keymap to toggle inlay hints in your code
-          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-            map('<leader>th', function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-            end, '[T]oggle Inlay [H]ints')
           end
         end,
       })
@@ -166,60 +100,139 @@ return {
       -- LSP servers and clients are able to communicate to each other what features they support.
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      -- Enable the following language servers
+      -- Configure specific LSP servers that need custom settings
+      -- All other servers will use default settings
       local servers = {
-        -- TypeScript/JavaScript
-        ts_ls = {},
+        -- TypeScript/JavaScript with memory optimization
+        ts_ls = {
+          -- Use NODE_OPTIONS to increase memory limit
+          cmd = {
+            "env",
+            "NODE_OPTIONS=--max-old-space-size=4096",
+            "typescript-language-server",
+            "--stdio"
+          },
+          init_options = {
+            hostInfo = 'neovim',
+            -- Limit tsserver memory usage
+            maxTsServerMemory = 4096,
+            preferences = {
+              includeInlayParameterNameHints = 'all',
+              includeInlayFunctionParameterTypeHints = true,
+              importModuleSpecifierPreference = 'relative',
+              includePackageJsonAutoImports = 'auto',
+            },
+          },
+          settings = {
+            typescript = {
+              tsserver = {
+                maxTsServerMemory = 4096,
+                useSingleInferredProject = true,
+                disableAutomaticTypingAcquisition = true,
+              },
+              inlayHints = {
+                includeInlayParameterNameHints = 'all',
+                includeInlayFunctionParameterTypeHints = true,
+              },
+            },
+            javascript = {
+              inlayHints = {
+                includeInlayParameterNameHints = 'all',
+                includeInlayFunctionParameterTypeHints = true,
+              },
+            },
+          },
+          -- Use a single tsserver for the workspace
+          root_dir = function(fname)
+            local util = require('lspconfig.util')
+            return util.root_pattern('package.json', 'tsconfig.json', '.git')(fname) or util.path.dirname(fname)
+          end,
+          single_file_support = false,
+        },
 
-        -- Kotlin
-        kotlin_language_server = {},
-
-        -- JSON
-        jsonls = {},
-
-        -- Docker
-        dockerls = {},
-
-        -- YAML
-        yamlls = {},
-
-        -- Prisma
-        prismals = {},
-
-        -- SQL
-        sqlls = {},
-
+        -- Lua LSP with Neovim-specific settings
         lua_ls = {
           settings = {
             Lua = {
               completion = {
                 callSnippet = 'Replace',
               },
+              diagnostics = {
+                globals = { 'vim' },
+              },
+              workspace = {
+                library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
+              },
+              telemetry = {
+                enable = false,
+              },
             },
           },
         },
       }
 
-      -- Ensure the servers and tools above are installed
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-        'prettier', -- JavaScript/TypeScript/JSON/YAML formatter
-        'eslint_d', -- JavaScript/TypeScript linter
-      })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      -- Tools to ensure are installed (formatters, linters, etc.)
+      local ensure_installed_tools = {
+        'stylua',     -- Lua formatter
+        'prettier',   -- JavaScript/TypeScript/JSON/YAML formatter
+        'eslint_d',   -- JavaScript/TypeScript linter
+      }
 
+      -- LSP servers to ensure are installed
+      -- These will be automatically set up with default configs unless specified in 'servers' table
+      local ensure_installed_lsps = {
+        'ts_ls',                  -- TypeScript/JavaScript
+        'lua_ls',                 -- Lua
+        'jsonls',                 -- JSON
+        'yamlls',                 -- YAML
+        'dockerls',               -- Docker
+        'prismals',               -- Prisma
+        'kotlin_language_server', -- Kotlin
+        'sqlls',                  -- SQL
+      }
+
+      -- Setup mason-tool-installer for formatters and linters
+      require('mason-tool-installer').setup {
+        ensure_installed = ensure_installed_tools,
+      }
+
+      -- Setup mason-lspconfig for automatic LSP installation and configuration
       require('mason-lspconfig').setup {
-        ensure_installed = {},
-        automatic_installation = false,
+        ensure_installed = ensure_installed_lsps,
+        automatic_installation = true,
         handlers = {
+          -- Default handler for all servers
           function(server_name)
-            local server = servers[server_name] or {}
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            local server_config = servers[server_name] or {}
+            -- Merge capabilities
+            server_config.capabilities = vim.tbl_deep_extend(
+              'force',
+              {},
+              capabilities,
+              server_config.capabilities or {}
+            )
+            -- Setup the server
+            require('lspconfig')[server_name].setup(server_config)
           end,
         },
       }
+
+      -- Create commands to manage TypeScript server memory
+      vim.api.nvim_create_user_command('LspRestartTsServer', function()
+        local clients = vim.lsp.get_clients({ name = 'ts_ls' })
+        for _, client in ipairs(clients) do
+          client.stop()
+        end
+        vim.cmd('edit') -- This will trigger LSP to restart
+      end, { desc = 'Restart TypeScript Language Server' })
+
+      vim.api.nvim_create_user_command('LspShowTsServerInfo', function()
+        local clients = vim.lsp.get_clients({ name = 'ts_ls' })
+        for _, client in ipairs(clients) do
+          print(string.format('TypeScript Server PID: %s, Root: %s', client.pid or 'unknown', client.config.root_dir or 'unknown'))
+        end
+      end, { desc = 'Show TypeScript Server Info' })
     end,
   },
 }
