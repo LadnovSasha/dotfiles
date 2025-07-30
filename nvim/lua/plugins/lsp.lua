@@ -170,6 +170,40 @@ return {
             },
           },
         },
+
+        -- ESLint LSP configuration
+        eslint = {
+          on_attach = function(client, bufnr)
+            -- Enable formatting through ESLint LSP
+            client.server_capabilities.documentFormattingProvider = true
+            -- Create a command to run ESLint fix all
+            vim.api.nvim_buf_create_user_command(bufnr, 'EslintFixAll', function()
+              vim.lsp.buf.execute_command({
+                command = 'eslint.applyAllFixes',
+                arguments = {
+                  {
+                    uri = vim.uri_from_bufnr(bufnr),
+                    version = vim.lsp.util.buf_versions[bufnr],
+                  },
+                },
+              })
+            end, { desc = 'Fix all ESLint errors' })
+          end,
+          settings = {
+            -- Helps with monorepos where ESLint is installed locally
+            nodePath = vim.fn.getcwd() .. '/node_modules',
+            -- Enable ESLint as formatter
+            format = true,
+            -- Quiet mode (reduces noise)
+            quiet = false,
+            -- Run on type (can be changed to onSave if it impacts performance)
+            run = 'onType',
+            -- Use ESLint from node_modules if available
+            useESLintClass = true,
+            -- Working directories
+            workingDirectories = { mode = 'auto' },
+          },
+        },
       }
 
       -- Tools to ensure are installed (formatters, linters, etc.)
@@ -183,6 +217,7 @@ return {
       -- These will be automatically set up with default configs unless specified in 'servers' table
       local ensure_installed_lsps = {
         'ts_ls',                  -- TypeScript/JavaScript
+        'eslint',                 -- ESLint LSP for code actions
         'lua_ls',                 -- Lua
         'jsonls',                 -- JSON
         'yamlls',                 -- YAML

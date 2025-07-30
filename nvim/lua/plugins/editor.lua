@@ -68,6 +68,13 @@ return {
   {
     'OXY2DEV/markview.nvim',
     lazy = false,
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = {
+      experimental = {
+        -- Disable the runtime path check warning
+        check_rtp_message = false,
+      },
+    },
   },
   {
     'leath-dub/snipe.nvim',

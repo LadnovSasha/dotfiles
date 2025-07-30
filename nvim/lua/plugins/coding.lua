@@ -117,10 +117,7 @@ return {
       local lint = require('lint')
       lint.linters_by_ft = {
         markdown = { 'markdownlint' },
-        javascript = { 'eslint_d' },
-        typescript = { 'eslint_d' },
-        tsx = { 'eslint_d' },
-        jsx = { 'eslint_d' },
+        -- ESLint is now handled by the ESLint LSP server
       }
 
       -- Create autocommand which carries out the actual linting

@@ -13,9 +13,12 @@ return {
         auto_trigger = true,
         hide_during_completion = vim.g.ai_cmp,
         keymap = {
-          accept = false, -- handled by nvim-cmp / blink.cmp
+          accept = '<Tab>',
+          accept_word = false,
+          accept_line = false,
           next = '<M-]>',
           prev = '<M-[>',
+          dismiss = '<C-]>',
         },
       },
       panel = { enabled = false },
@@ -30,7 +33,7 @@ return {
   {
     'giuxtaposition/blink-cmp-copilot',
     dependencies = {
-      'zbirenbaum/copilot.vim',
+      'zbirenbaum/copilot.lua',
     },
   },
 }
