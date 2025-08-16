@@ -6,13 +6,13 @@
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>cd', vim.diagnostic.open_float, { desc = '[C]ode [D]iagnostics' })
+vim.keymap.set('n', '<leader>cd', vim.diagnostic.open_float, { desc = 'Show diagnostics' })
 vim.keymap.set('n', ']e', function()
   vim.diagnostic.jump { count = 1, severity = vim.diagnostic.severity.ERROR }
-end, { desc = 'Next [D]iagnostic' })
+end, { desc = 'Next error' })
 vim.keymap.set('n', '[e', function()
   vim.diagnostic.jump { count = -1, severity = vim.diagnostic.severity.ERROR }
-end, { desc = 'Previous [D]iagnostic' })
+end, { desc = 'Previous error' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -47,7 +47,7 @@ vim.keymap.set('n', '<C-x>', '"+dd', { noremap = true, silent = true, desc = 'Cu
 vim.keymap.set('x', 'p', '"_dP', { noremap = true, silent = true, desc = 'Paste without overwriting clipboard' })
 
 -- Quick quit
-vim.keymap.set('n', '<leader>qq', '<cmd>qa<cr>', { desc = 'Quit All' })
+vim.keymap.set('n', '<leader>qq', '<cmd>qa<cr>', { desc = 'Quit all' })
 vim.keymap.set('n', '<leader>wq', '<cmd>q<cr>', { desc = 'Quit current buffer' })
 
 -- Switch to most recent buffer (double leader)
@@ -71,20 +71,20 @@ vim.api.nvim_create_autocmd('LspAttach', {
       else
         vim.lsp.buf.hover()
       end
-    end, 'Hover Documentation or Diagnostics')
+    end, 'Show info')
 
     -- Rename the variable under your cursor.
-    map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-    map('<leader>cr', vim.lsp.buf.rename, '[C]ode [R]ename')
+    map('grn', vim.lsp.buf.rename, 'Rename symbol')
+    map('<leader>cr', vim.lsp.buf.rename, 'Rename')
 
     -- Execute a code action, usually your cursor needs to be on top of an error
-    map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
-    map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+    map('gra', vim.lsp.buf.code_action, 'Code actions', { 'n', 'x' })
+    map('<leader>ca', vim.lsp.buf.code_action, 'Code actions', { 'n', 'x' })
 
     -- Format document or selection
     map('<leader>cf', function()
       vim.lsp.buf.format { async = true }
-    end, '[C]ode [F]ormat')
+    end, 'Format code')
 
     -- Organize imports
     map('<leader>co', function()
@@ -94,7 +94,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
           only = { 'source.organizeImports' },
         },
       }
-    end, '[C]ode [O]rganize imports')
+    end, 'Organize imports')
 
     -- Add missing imports
     map('<leader>cm', function()
@@ -104,23 +104,23 @@ vim.api.nvim_create_autocmd('LspAttach', {
           only = { 'source.addMissingImports' },
         },
       }
-    end, '[C]ode Add [M]issing imports')
+    end, 'Add missing imports')
     -- Find references for the word under your cursor.
-    map('grr', require('fzf-lua').lsp_references, '[G]oto [R]eferences')
+    map('grr', require('fzf-lua').lsp_references, 'Find references')
 
     -- Jump to the implementation of the word under your cursor.
-    map('gi', require('fzf-lua').lsp_implementations, '[G]oto [I]mplementation')
+    map('gi', require('fzf-lua').lsp_implementations, 'Find implementations')
 
     -- Jump to the definition of the word under your cursor.
-    map('gd', require('fzf-lua').lsp_definitions, '[G]oto [D]efinition')
+    map('gd', require('fzf-lua').lsp_definitions, 'Go to definition')
 
     -- Fuzzy find all the symbols in your current document.
-    map('gO', require('fzf-lua').lsp_document_symbols, 'Open Document Symbols')
+    map('gO', require('fzf-lua').lsp_document_symbols, 'Document symbols')
 
     -- Fuzzy find all the symbols in your current workspace.
-    map('gW', require('fzf-lua').lsp_workspace_symbols, 'Open Workspace Symbols')
+    map('gW', require('fzf-lua').lsp_workspace_symbols, 'Workspace symbols')
 
     -- Jump to the type of the word under your cursor.
-    map('grt', require('fzf-lua').lsp_typedefs, '[G]oto [T]ype Definition')
+    map('grt', require('fzf-lua').lsp_typedefs, 'Type definition')
   end,
 })

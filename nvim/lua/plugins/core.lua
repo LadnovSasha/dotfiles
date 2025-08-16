@@ -65,8 +65,8 @@ return {
         },
       },
       spec = {
-        { '<leader>s', group = '[S]earch' },
-        { '<leader>t', group = '[T]oggle' },
+        { '<leader>s', group = 'Search' },
+        { '<leader>t', group = 'Toggle' },
       },
     },
   },
@@ -95,29 +95,29 @@ return {
       }
 
       -- LazyVim-style keymaps
-      vim.keymap.set('n', '<leader>ff', fzf.files, { desc = 'Find Files' })
-      vim.keymap.set('n', '<leader>fg', fzf.live_grep, { desc = 'Find by Grep' })
-      vim.keymap.set('n', '<leader>fb', fzf.buffers, { desc = 'Find Buffers' })
-      vim.keymap.set('n', '<leader>fr', fzf.oldfiles, { desc = 'Find Recent Files' })
-      vim.keymap.set('n', '<leader>fc', fzf.grep_cword, { desc = 'Find current Word' })
-      vim.keymap.set('n', '<leader>fh', fzf.help_tags, { desc = 'Find Help' })
-      vim.keymap.set('n', '<leader>fk', fzf.keymaps, { desc = 'Find Keymaps' })
-      vim.keymap.set('n', '<leader>fd', fzf.diagnostics_workspace, { desc = 'Find Diagnostics' })
-      vim.keymap.set('n', '<leader>fs', fzf.builtin, { desc = 'Find Select fzf-lua' })
+      vim.keymap.set('n', '<leader>ff', fzf.files, { desc = 'Find files' })
+      vim.keymap.set('n', '<leader>fg', fzf.live_grep, { desc = 'Search text' })
+      vim.keymap.set('n', '<leader>fb', fzf.buffers, { desc = 'Open buffers' })
+      vim.keymap.set('n', '<leader>fr', fzf.oldfiles, { desc = 'Recent files' })
+      vim.keymap.set('n', '<leader>fc', fzf.grep_cword, { desc = 'Search current word' })
+      vim.keymap.set('n', '<leader>fh', fzf.help_tags, { desc = 'Help docs' })
+      vim.keymap.set('n', '<leader>fk', fzf.keymaps, { desc = 'Keymaps' })
+      vim.keymap.set('n', '<leader>fd', fzf.diagnostics_workspace, { desc = 'Diagnostics' })
+      vim.keymap.set('n', '<leader>fs', fzf.builtin, { desc = 'Fzf commands' })
 
       -- Kickstart-style keymaps (keeping these for compatibility)
-      vim.keymap.set('n', '<leader>sh', fzf.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', fzf.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', fzf.files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', fzf.builtin, { desc = '[S]earch [S]elect fzf-lua' })
-      vim.keymap.set('n', '<leader>sw', fzf.grep_cword, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', fzf.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', fzf.diagnostics_workspace, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', fzf.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', fzf.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader>sh', fzf.help_tags, { desc = 'Search help' })
+      vim.keymap.set('n', '<leader>sk', fzf.keymaps, { desc = 'Search keymaps' })
+      vim.keymap.set('n', '<leader>sf', fzf.files, { desc = 'Search files' })
+      vim.keymap.set('n', '<leader>ss', fzf.builtin, { desc = 'Search commands' })
+      vim.keymap.set('n', '<leader>sw', fzf.grep_cword, { desc = 'Search current word' })
+      vim.keymap.set('n', '<leader>sg', fzf.live_grep, { desc = 'Search by grep' })
+      vim.keymap.set('n', '<leader>sd', fzf.diagnostics_workspace, { desc = 'Search diagnostics' })
+      vim.keymap.set('n', '<leader>sr', fzf.resume, { desc = 'Resume search' })
+      vim.keymap.set('n', '<leader>s.', fzf.oldfiles, { desc = 'Search recent files' })
 
       -- Current buffer fuzzy search
-      vim.keymap.set('n', '<leader>/', fzf.blines, { desc = '[/] Fuzzily search in current buffer' })
+      vim.keymap.set('n', '<leader>/', fzf.blines, { desc = 'Search in buffer' })
 
       -- Search in open files
       vim.keymap.set('n', '<leader>s/', function()
@@ -126,12 +126,12 @@ return {
           file_ignore_patterns = { 'node_modules', '.git' },
           prompt = 'Live Grep in Open Files> ',
         }
-      end, { desc = '[S]earch [/] in Open Files' })
+      end, { desc = 'Search in open files' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function()
         fzf.files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[S]earch [N]eovim files' })
+      end, { desc = 'Search nvim config' })
     end,
   },
 
