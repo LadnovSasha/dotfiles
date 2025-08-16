@@ -6,10 +6,13 @@
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 vim.keymap.set('n', '<leader>cd', vim.diagnostic.open_float, { desc = '[C]ode [D]iagnostics' })
-vim.keymap.set('n', ']e', vim.diagnostic.goto_next, { desc = 'Next [D]iagnostic' })
-vim.keymap.set('n', '[e', vim.diagnostic.goto_prev, { desc = 'Previous [D]iagnostic' })
+vim.keymap.set('n', ']e', function()
+  vim.diagnostic.jump { count = 1, severity = vim.diagnostic.severity.ERROR }
+end, { desc = 'Next [D]iagnostic' })
+vim.keymap.set('n', '[e', function()
+  vim.diagnostic.jump { count = -1, severity = vim.diagnostic.severity.ERROR }
+end, { desc = 'Previous [D]iagnostic' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -40,6 +43,9 @@ vim.keymap.set('v', '<C-x>', '"+d', { noremap = true, silent = true, desc = 'Cut
 vim.keymap.set('n', '<C-c>', '"+yy', { noremap = true, silent = true, desc = 'Copy line to system clipboard' })
 vim.keymap.set('n', '<C-x>', '"+dd', { noremap = true, silent = true, desc = 'Cut line to system clipboard' })
 
+-- Preserve clipboard when pasting over visual selection
+vim.keymap.set('x', 'p', '"_dP', { noremap = true, silent = true, desc = 'Paste without overwriting clipboard' })
+
 -- Quick quit
 vim.keymap.set('n', '<leader>qq', '<cmd>qa<cr>', { desc = 'Quit All' })
 vim.keymap.set('n', '<leader>wq', '<cmd>q<cr>', { desc = 'Quit current buffer' })
@@ -56,6 +62,16 @@ vim.api.nvim_create_autocmd('LspAttach', {
       mode = mode or 'n'
       vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
     end
+
+    -- K to show diagnostics if present, otherwise show hover
+    map('K', function()
+      local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line '.' - 1 })
+      if #diagnostics > 0 then
+        vim.diagnostic.open_float()
+      else
+        vim.lsp.buf.hover()
+      end
+    end, 'Hover Documentation or Diagnostics')
 
     -- Rename the variable under your cursor.
     map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -90,21 +106,21 @@ vim.api.nvim_create_autocmd('LspAttach', {
       }
     end, '[C]ode Add [M]issing imports')
     -- Find references for the word under your cursor.
-    map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+    map('grr', require('fzf-lua').lsp_references, '[G]oto [R]eferences')
 
     -- Jump to the implementation of the word under your cursor.
-    map('gi', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+    map('gi', require('fzf-lua').lsp_implementations, '[G]oto [I]mplementation')
 
     -- Jump to the definition of the word under your cursor.
-    map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+    map('gd', require('fzf-lua').lsp_definitions, '[G]oto [D]efinition')
 
     -- Fuzzy find all the symbols in your current document.
-    map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
+    map('gO', require('fzf-lua').lsp_document_symbols, 'Open Document Symbols')
 
     -- Fuzzy find all the symbols in your current workspace.
-    map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
+    map('gW', require('fzf-lua').lsp_workspace_symbols, 'Open Workspace Symbols')
 
     -- Jump to the type of the word under your cursor.
-    map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+    map('grt', require('fzf-lua').lsp_typedefs, '[G]oto [T]ype Definition')
   end,
 })

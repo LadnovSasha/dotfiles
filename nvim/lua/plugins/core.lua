@@ -1,4 +1,4 @@
--- Core plugins: which-key, telescope, treesitter, etc.
+-- Core plugins: which-key, fzf-lua, treesitter, etc.
 
 return {
   -- Detect tabstop and shiftwidth automatically
@@ -71,83 +71,66 @@ return {
     },
   },
 
-  -- Telescope fuzzy finder
+  -- fzf-lua fuzzy finder (faster alternative to Telescope)
   {
-    'nvim-telescope/telescope.nvim',
+    'ibhagwan/fzf-lua',
     event = 'VimEnter',
     dependencies = {
-      'nvim-lua/plenary.nvim',
-      {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        build = 'make',
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
-      },
-      { 'nvim-telescope/telescope-ui-select.nvim' },
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
-      require('telescope').setup {
-        defaults = {
-          layout_config = {
-            prompt_position = 'top',
-          },
-          sorting_strategy = 'ascending',
-        },
-        extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
+      local fzf = require 'fzf-lua'
+      
+      -- Setup with telescope defaults for familiar keybindings and behavior
+      fzf.setup {
+        'telescope',
+        winopts = {
+          height = 0.85,
+          width = 0.85,
+          preview = {
+            layout = 'vertical',
+            vertical = 'down:45%',
           },
         },
       }
 
-      -- Enable Telescope extensions if they are installed
-      pcall(require('telescope').load_extension, 'fzf')
-      pcall(require('telescope').load_extension, 'ui-select')
-
-      -- See `:help telescope.builtin`
-      local builtin = require 'telescope.builtin'
       -- LazyVim-style keymaps
-      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Find Files' })
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Find by Grep' })
-      vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Find Buffers' })
-      vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = 'Find Recent Files' })
-      vim.keymap.set('n', '<leader>fc', builtin.grep_string, { desc = 'Find current Word' })
-      vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Find Help' })
-      vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = 'Find Keymaps' })
-      vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = 'Find Diagnostics' })
-      vim.keymap.set('n', '<leader>fs', builtin.builtin, { desc = 'Find Select Telescope' })
+      vim.keymap.set('n', '<leader>ff', fzf.files, { desc = 'Find Files' })
+      vim.keymap.set('n', '<leader>fg', fzf.live_grep, { desc = 'Find by Grep' })
+      vim.keymap.set('n', '<leader>fb', fzf.buffers, { desc = 'Find Buffers' })
+      vim.keymap.set('n', '<leader>fr', fzf.oldfiles, { desc = 'Find Recent Files' })
+      vim.keymap.set('n', '<leader>fc', fzf.grep_cword, { desc = 'Find current Word' })
+      vim.keymap.set('n', '<leader>fh', fzf.help_tags, { desc = 'Find Help' })
+      vim.keymap.set('n', '<leader>fk', fzf.keymaps, { desc = 'Find Keymaps' })
+      vim.keymap.set('n', '<leader>fd', fzf.diagnostics_workspace, { desc = 'Find Diagnostics' })
+      vim.keymap.set('n', '<leader>fs', fzf.builtin, { desc = 'Find Select fzf-lua' })
 
       -- Kickstart-style keymaps (keeping these for compatibility)
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader>sh', fzf.help_tags, { desc = '[S]earch [H]elp' })
+      vim.keymap.set('n', '<leader>sk', fzf.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>sf', fzf.files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>ss', fzf.builtin, { desc = '[S]earch [S]elect fzf-lua' })
+      vim.keymap.set('n', '<leader>sw', fzf.grep_cword, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', fzf.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sd', fzf.diagnostics_workspace, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sr', fzf.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>s.', fzf.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
 
-      -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      -- Current buffer fuzzy search
+      vim.keymap.set('n', '<leader>/', fzf.blines, { desc = '[/] Fuzzily search in current buffer' })
 
+      -- Search in open files
       vim.keymap.set('n', '<leader>s/', function()
-        builtin.live_grep {
-          grep_open_files = true,
-          prompt_title = 'Live Grep in Open Files',
+        fzf.live_grep {
+          grep_opts = '--vimgrep',
+          file_ignore_patterns = { 'node_modules', '.git' },
+          prompt = 'Live Grep in Open Files> ',
         }
       end, { desc = '[S]earch [/] in Open Files' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function()
-        builtin.find_files { cwd = vim.fn.stdpath 'config' }
+        fzf.files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
