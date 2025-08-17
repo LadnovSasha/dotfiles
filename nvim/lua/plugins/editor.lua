@@ -95,7 +95,7 @@ return {
     branch = 'harpoon2',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
-      local harpoon = require 'harpoon'
+      local harpoon = require('harpoon')
       harpoon:setup()
     end,
     keys = {
@@ -109,7 +109,7 @@ return {
       {
         '<leader>h',
         function()
-          local harpoon = require 'harpoon'
+          local harpoon = require('harpoon')
           harpoon.ui:toggle_quick_menu(harpoon:list())
         end,
         desc = 'Harpoon: Toggle quick menu',
@@ -160,6 +160,22 @@ return {
           Snacks.scratch.select()
         end,
         desc = 'Select Scratch Buffer',
+      },
+    },
+  },
+  {
+    'echasnovski/mini.surround',
+    version = '*',
+    event = 'VeryLazy',
+    opts = {
+      mappings = {
+        add = 'gsa',
+        delete = 'gsd',
+        find = 'gsf',
+        find_left = 'gsF',
+        highlight = 'gsh',
+        replace = 'gsr',
+        update_n_lines = '',
       },
     },
   },
