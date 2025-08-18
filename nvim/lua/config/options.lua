@@ -81,4 +81,8 @@ vim.o.foldenable = true
 
 -- Basic indentation behavior
 vim.o.smartindent = true -- Insert indents automatically
-vim.o.shiftround = true  -- Round indent to multiple of shiftwidth
+vim.o.shiftround = true -- Round indent to multiple of shiftwidth
+
+-- Enable true color support and transparency
+vim.o.termguicolors = true
+

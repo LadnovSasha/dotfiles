@@ -34,7 +34,7 @@ return {
         callback = function(event)
           -- This function resolves a difference between neovim nightly and stable
           local function client_supports_method(client, method, bufnr)
-            if vim.fn.has 'nvim-0.11' == 1 then
+            if vim.fn.has('nvim-0.11') == 1 then
               return client:supports_method(method, bufnr)
             else
               return client.supports_method(method, { bufnr = bufnr })
@@ -62,7 +62,7 @@ return {
               group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
               callback = function(event2)
                 vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = 'lsp-document-highlight', buffer = event2.buf }
+                vim.api.nvim_clear_autocmds({ group = 'lsp-document-highlight', buffer = event2.buf })
               end,
             })
           end
@@ -70,7 +70,7 @@ return {
       })
 
       -- Diagnostic Config
-      vim.diagnostic.config {
+      vim.diagnostic.config({
         severity_sort = true,
         float = { border = 'rounded', source = 'if_many' },
         underline = { severity = vim.diagnostic.severity.ERROR },
@@ -95,7 +95,7 @@ return {
             return diagnostic_message[diagnostic.severity]
           end,
         },
-      }
+      })
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       local capabilities = require('blink.cmp').get_lsp_capabilities()
@@ -107,10 +107,10 @@ return {
         ts_ls = {
           -- Use NODE_OPTIONS to increase memory limit
           cmd = {
-            "env",
-            "NODE_OPTIONS=--max-old-space-size=4096",
-            "typescript-language-server",
-            "--stdio"
+            'env',
+            'NODE_OPTIONS=--max-old-space-size=4096',
+            'typescript-language-server',
+            '--stdio',
           },
           init_options = {
             hostInfo = 'neovim',
@@ -161,7 +161,7 @@ return {
                 globals = { 'vim' },
               },
               workspace = {
-                library = vim.api.nvim_get_runtime_file("", true),
+                library = vim.api.nvim_get_runtime_file('', true),
                 checkThirdParty = false,
               },
               telemetry = {
@@ -208,32 +208,31 @@ return {
 
       -- Tools to ensure are installed (formatters, linters, etc.)
       local ensure_installed_tools = {
-        'stylua',     -- Lua formatter
-        'prettier',   -- JavaScript/TypeScript/JSON/YAML formatter
-        'eslint_d',   -- JavaScript/TypeScript linter
+        'stylua', -- Lua formatter
+        'prettier', -- JavaScript/TypeScript/JSON/YAML formatter
+        'eslint_d', -- JavaScript/TypeScript linter
       }
 
       -- LSP servers to ensure are installed
       -- These will be automatically set up with default configs unless specified in 'servers' table
       local ensure_installed_lsps = {
-        'ts_ls',                  -- TypeScript/JavaScript
-        'eslint',                 -- ESLint LSP for code actions
-        'lua_ls',                 -- Lua
-        'jsonls',                 -- JSON
-        'yamlls',                 -- YAML
-        'dockerls',               -- Docker
-        'prismals',               -- Prisma
+        'ts_ls', -- TypeScript/JavaScript
+        'eslint', -- ESLint LSP for code actions
+        'lua_ls', -- Lua
+        'jsonls', -- JSON
+        'yamlls', -- YAML
+        'dockerls', -- Docker
+        'prismals', -- Prisma
         'kotlin_language_server', -- Kotlin
-        'sqlls',                  -- SQL
       }
 
       -- Setup mason-tool-installer for formatters and linters
-      require('mason-tool-installer').setup {
+      require('mason-tool-installer').setup({
         ensure_installed = ensure_installed_tools,
-      }
+      })
 
       -- Setup mason-lspconfig for automatic LSP installation and configuration
-      require('mason-lspconfig').setup {
+      require('mason-lspconfig').setup({
         ensure_installed = ensure_installed_lsps,
         automatic_installation = true,
         handlers = {
@@ -241,17 +240,12 @@ return {
           function(server_name)
             local server_config = servers[server_name] or {}
             -- Merge capabilities
-            server_config.capabilities = vim.tbl_deep_extend(
-              'force',
-              {},
-              capabilities,
-              server_config.capabilities or {}
-            )
+            server_config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_config.capabilities or {})
             -- Setup the server
             require('lspconfig')[server_name].setup(server_config)
           end,
         },
-      }
+      })
 
       -- Create commands to manage TypeScript server memory
       vim.api.nvim_create_user_command('LspRestartTsServer', function()
