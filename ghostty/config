@@ -23,10 +23,13 @@ cursor-click-to-move = true
 background-opacity = 0.8
 background-blur = true
 unfocused-split-opacity = 0.8
-window-padding-x = 4
-window-padding-y = 4
 macos-window-shadow = false
-macos-titlebar-proxy-icon = visible
+window-decoration = auto
+macos-titlebar-style = hidden
+
+# Window Padding (reduced bottom padding)
+window-padding-x = 5
+window-padding-y = 0
 
 # Performance and Buffer (optimized)
 scrollback-limit = 50000

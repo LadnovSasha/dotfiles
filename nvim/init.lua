@@ -85,16 +85,16 @@ P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
 -- Load configuration modules
-require 'config.options'
-require 'config.keymaps'
-require 'config.autocmds'
+require('config.options')
+require('config.keymaps')
+require('config.autocmds')
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
-  local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
+  local out = vim.fn.system({ 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     error('Error cloning lazy.nvim:\n' .. out)
   end
@@ -125,6 +125,7 @@ require('lazy').setup({
   { import = 'plugins.editor' },
   { import = 'plugins.terminal' },
   { import = 'plugins.copilot' },
+  { import = 'plugins.rust' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
@@ -149,4 +150,3 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-

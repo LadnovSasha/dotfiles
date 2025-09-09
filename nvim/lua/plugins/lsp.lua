@@ -211,6 +211,7 @@ return {
         'stylua', -- Lua formatter
         'prettier', -- JavaScript/TypeScript/JSON/YAML formatter
         'eslint_d', -- JavaScript/TypeScript linter
+        'codelldb', -- Rust debugger
       }
 
       -- LSP servers to ensure are installed
@@ -224,6 +225,7 @@ return {
         'dockerls', -- Docker
         'prismals', -- Prisma
         'kotlin_language_server', -- Kotlin
+        'rust_analyzer', -- Rust
       }
 
       -- Setup mason-tool-installer for formatters and linters

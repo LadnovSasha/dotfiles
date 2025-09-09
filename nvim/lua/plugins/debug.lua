@@ -14,18 +14,18 @@ return {
       },
     },
     config = function()
-      local dap = require 'dap'
+      local dap = require('dap')
 
       -- Visual highlight for stopped line
       vim.api.nvim_set_hl(0, 'DapStoppedLine', { default = true, link = 'Visual' })
 
       -- DAP icons setup (Nerd Font icons)
       local icons = {
-        Stopped = { '󰁕', 'DiagnosticWarn', 'DapStoppedLine' },
-        Breakpoint = '●',
-        BreakpointCondition = '◆',
-        BreakpointRejected = { '✖', 'DiagnosticError' },
-        LogPoint = '◉',
+        Stopped = { '', 'DiagnosticWarn', 'DapStoppedLine' },
+        Breakpoint = '',
+        BreakpointCondition = '',
+        BreakpointRejected = { '', 'DiagnosticError' },
+        LogPoint = '',
       }
 
       for name, sign in pairs(icons) do
@@ -39,7 +39,7 @@ return {
         host = 'localhost',
         port = '${port}',
         executable = {
-          command = vim.fn.stdpath 'data' .. '/mason/bin/js-debug-adapter',
+          command = vim.fn.stdpath('data') .. '/mason/bin/js-debug-adapter',
           args = { '${port}' },
         },
       }
@@ -49,7 +49,7 @@ return {
         host = 'localhost',
         port = '${port}',
         executable = {
-          command = vim.fn.stdpath 'data' .. '/mason/bin/js-debug-adapter',
+          command = vim.fn.stdpath('data') .. '/mason/bin/js-debug-adapter',
           args = { '${port}' },
         },
       }
@@ -59,14 +59,14 @@ return {
         host = 'localhost',
         port = '${port}',
         executable = {
-          command = vim.fn.stdpath 'data' .. '/mason/bin/js-debug-adapter',
+          command = vim.fn.stdpath('data') .. '/mason/bin/js-debug-adapter',
           args = { '${port}' },
         },
       }
 
       -- Load VS Code launch.json configurations if they exist
-      local vscode = require 'dap.ext.vscode'
-      local json = require 'plenary.json'
+      local vscode = require('dap.ext.vscode')
+      local json = require('plenary.json')
       vscode.json_decode = function(str)
         return vim.json.decode(json.json_strip_comments(str))
       end
@@ -83,7 +83,7 @@ return {
       {
         '<leader>dB',
         function()
-          require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+          require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))
         end,
         desc = 'Breakpoint Condition',
       },
@@ -224,22 +224,22 @@ return {
       },
     },
     config = function()
-      local dap = require 'dap'
-      local dapui = require 'dapui'
-      dapui.setup {
+      local dap = require('dap')
+      local dapui = require('dapui')
+      dapui.setup({
         controls = {
           element = 'repl',
           enabled = true,
           icons = {
-            disconnect = '',
-            pause = '',
-            play = '',
-            run_last = '',
-            step_back = '',
-            step_into = '',
-            step_out = '',
-            step_over = '',
-            terminate = '',
+            disconnect = '',
+            pause = '',
+            play = '',
+            run_last = '',
+            step_back = '',
+            step_into = '󰆹',
+            step_out = '󰆸',
+            step_over = '',
+            terminate = '',
           },
         },
         element_mappings = {},
@@ -260,38 +260,16 @@ return {
           {
             elements = {
               {
-                id = 'scopes',
-                size = 0.25,
-              },
-              {
-                id = 'breakpoints',
-                size = 0.25,
-              },
-              {
-                id = 'stacks',
-                size = 0.25,
-              },
-              {
-                id = 'watches',
-                size = 0.25,
-              },
-            },
-            position = 'left',
-            size = 40,
-          },
-          {
-            elements = {
-              {
                 id = 'repl',
-                size = 0.5,
+                size = 0.25,
               },
               {
                 id = 'console',
-                size = 0.5,
+                size = 0.75,
               },
             },
             position = 'bottom',
-            size = 10,
+            size = 15,
           },
         },
         mappings = {
@@ -306,7 +284,7 @@ return {
           indent = 1,
           max_value_lines = 100,
         },
-      }
+      })
 
       -- DAP UI auto-close on debugging end (but don't auto-open)
       dap.listeners.before.event_terminated['dapui_config'] = function()
@@ -318,4 +296,3 @@ return {
     end,
   },
 }
-

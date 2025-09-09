@@ -124,3 +124,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
     map('grt', require('fzf-lua').lsp_typedefs, 'Type definition')
   end,
 })
+
+-- Zellij session switching keymaps (only when inside Zellij)
+if os.getenv('ZELLIJ') then
+  -- Create keymaps for Ctrl+1 through Ctrl+5 to switch sessions
+  for i = 1, 5 do
+    vim.keymap.set({'n', 'i', 't', 'v'}, string.format('<C-%d>', i), function()
+      vim.fn.system(string.format('zellij action pipe --name "hotbar_%d"', i))
+    end, { silent = true, desc = string.format('Switch to Zellij session %d', i) })
+  end
+end
